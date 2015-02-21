@@ -244,10 +244,10 @@ def addhotlist(data,seng,vin,notify,theplate):
                     olddata = "nothing"
                 
                 if olddata != data:
-                logger.info('')
-                logger.info('OLD DATA IS --> :'+olddata)
-                logger.info('NEW DATA IS --> :'+data)
-                logger.info('you should get this email of new data of previous')
+                    logger.info('')
+                    logger.info('OLD DATA IS --> :'+olddata)
+                    logger.info('NEW DATA IS --> :'+data)
+                    logger.info('you should get this email of new data of previous')
                     bge = data
                     cursor.execute ("UPDATE queue SET bge=%s WHERE vin = %s",(bge,vin))
                     db.commit()
