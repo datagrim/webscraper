@@ -54,6 +54,14 @@ logger.addHandler(hdlr)
 logger.addHandler(fh) 
 logger.setLevel(logging.DEBUG)
 
+#compare string
+def containDate(word):
+    regexp = re.compile(r'(\d+/\d+/\d+)')
+    if regexp.search(word) is not None:
+        return True
+    else:
+        return False
+
 #Definitions
 def monkeypatch_mechanize():
  #Work-around for a mechanize 0.2.5 bug. See: https://github.com/jjlee/mechanize/pull/58
@@ -716,16 +724,44 @@ def dcdmvDC (theplate,vin,notify):
             tree1 =  lxml.html.tostring(table)
             tree2 = lxml.html.fromstring(tree1)
             rows = tree2.xpath('//table/tr')
-        
+            flagger = False
+            start_zone = 1
         
             for row in rows:
                     data.append([c.text for c in row.getchildren()])
-        
-            for i in range(3,len(data)-1):
-                issue_date = data[i][2]
-        
-                if issue_date is None and '/' not in issue_date:
-                    continue
+            
+            #print data[1][1]
+            if data[1][1] != None and data[1][1].strip() == 'You must pay all of the following boot eligible tickets to retrieve your vehicle.':
+                flagger = True
+                start_zone = 3
+            else:
+                start_zone = 1
+            
+            for i in range(start_zone,len(data)-1):
+                ticket_number = ''
+                issue_date = ''
+                violation = ''
+                location = ''
+                
+                if flagger == True:
+                    if data[i][2] != None and containDate(data[i][2]):
+                        print data[i][2]
+                        issue_date = data[i][2]
+                        violation = data[i][3]
+                        ticket_number = data[i][1]
+                        location = data[i][4]
+                    else:
+                        continue
+                else:
+                    if data[i][1] != None and containDate(data[i][1]):
+                        print data[i][1]
+                        issue_date = data[i][1]
+                        violation = data[i][2]
+                        location = data[i][3]
+                        ticket_number = data[i][0]
+                    else:
+                        continue
+                    
                 
                 if len(issue_date) != 0:
                     curdate = str(time.strftime("%m/%d/%Y"))
@@ -734,7 +770,7 @@ def dcdmvDC (theplate,vin,notify):
                     since = abs((end_date-start_date).days)
         
                     if since <= 14:
-                        data2.append ("Ticket#: %s Issue Date: %s Violation: %s Location: %s" % (data[i][0],data[i][1],data[i][2],data[i][3]))
+                        data2.append ("Ticket#: %s Issue Date: %s Violation: %s Location: %s" % (ticket_number,issue_date,violation,location))
         
         
          if len(data) != 0:
@@ -745,9 +781,11 @@ def dcdmvDC (theplate,vin,notify):
             br.close
 
     except Exception as e:
+            print traceback.format_exc()
             logger.error("There was error inside the dcdmvDC method "+str(e))
             logger.error('Information are theplate -> %s, vin -> %s, notify -> %s', theplate,vin,notify)
     return
+    
 
 def dcdmvMD (theplate,vin,notify):
     try:
