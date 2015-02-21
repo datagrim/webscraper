@@ -153,10 +153,8 @@ def addhotlist(data,seng,vin,notify,theplate):
              olddata =""
             
              if sengine == "mdcourt":
-                cursor.execute ("""
-                SELECT * FROM queue
-                WHERE  mdcourt LIKE  %s
-                """, (data))
+                datas = '%' + data + '%'
+                cursor.execute ("SELECT * FROM queue WHERE  mdcourt LIKE  %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -166,19 +164,13 @@ def addhotlist(data,seng,vin,notify,theplate):
             
                 if olddata != data:
                     mdcourt = data
-                    cursor.execute ("""
-                    UPDATE queue
-                    SET mdcourt=%s
-                    WHERE vin = %s
-                    """,(mdcourt,vin))
+                    cursor.execute ("UPDATE queue SET mdcourt=%s WHERE vin = %s ",(mdcourt,vin))
                     db.commit()
                     sendnotice(vin,mdcourt,email,sengine,theplate);
             
              elif sengine == "mdcityservices":
-                cursor.execute ("""
-                SELECT * FROM queue
-                WHERE  mdcityservices LIKE  %s
-                """, (data))
+                datas = '%' + data + '%'
+                cursor.execute ("SELECT * FROM queue WHERE  mdcityservices LIKE  %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -188,19 +180,13 @@ def addhotlist(data,seng,vin,notify,theplate):
             
                 if olddata != data:
                     mdcityservices = data
-                    cursor.execute ("""
-                    UPDATE queue
-                    SET mdcityservices=%s
-                    WHERE vin = %s
-                    """,(mdcityservices,vin))
+                    cursor.execute ("UPDATE queue SET mdcityservices=%s WHERE vin = %s",(mdcityservices,vin))
                     db.commit()
                     sendnotice(vin,mdcityservices,email,sengine,theplate);
             
              elif sengine == "dcdmvmd":
-                cursor.execute ("""
-                SELECT * FROM queue
-                WHERE  dcdmvmd LIKE  %s
-                """, (data))
+                datas = '%' + data + '%'
+                cursor.execute ("SELECT * FROM queue WHERE  dcdmvmd LIKE  %s ", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -210,19 +196,13 @@ def addhotlist(data,seng,vin,notify,theplate):
             
                 if olddata != data:
                     dcdmvmd = data
-                    cursor.execute ("""
-                    UPDATE queue
-                    SET dcdmvmd=%s
-                    WHERE vin = %s
-                    """,(dcdmvmd,vin))
+                    cursor.execute ("UPDATE queue SET dcdmvmd=%s WHERE vin = %s ",(dcdmvmd,vin))
                     db.commit()
                     sendnotice(vin,dcdmvmd,email,sengine,theplate);
             
              elif sengine == "dcdmvdc":
-                cursor.execute ("""
-                SELECT * FROM queue
-                WHERE dcdmvdc LIKE  %s
-                """, (data))
+                datas = '%' + data + '%'
+                cursor.execute ("SELECT * FROM queue WHERE dcdmvdc LIKE  %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -232,19 +212,13 @@ def addhotlist(data,seng,vin,notify,theplate):
             
                 if olddata != data:
                     dcdmvdc = data
-                    cursor.execute ("""
-                    UPDATE queue
-                    SET dcdmvdc=%s
-                    WHERE vin = %s
-                    """,(dcdmvdc,vin))
+                    cursor.execute ("UPDATE queue SET dcdmvdc=%s WHERE vin = %s",(dcdmvdc,vin))
                     db.commit()
                     sendnotice(vin,dcdmvdc,email,sengine,theplate);
             
              elif sengine == "autreturn":
-                cursor.execute ("""
-                SELECT * FROM queue
-                WHERE  autreturn LIKE  %s
-                """, (data))
+                datas = '%' + data + '%'
+                cursor.execute ("SELECT * FROM queue WHERE  autreturn LIKE  %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -254,19 +228,14 @@ def addhotlist(data,seng,vin,notify,theplate):
             
                 if olddata != data:
                     autreturn = data
-                    cursor.execute ("""
-                    UPDATE queue
-                    SET autreturn=%s
-                    WHERE vin = %s
-                    """,(autreturn,vin))
+                    cursor.execute ("UPDATE queue SET autreturn=%s WHERE vin = %s",(autreturn,vin))
                     db.commit()
                     sendnotice(vin,autreturn,email,sengine,theplate);
             
              elif sengine == "bge":
-                cursor.execute ("""
-                SELECT * FROM queue
-                WHERE  bge LIKE  %s
-                """, (data))
+                datas = '%' + data + '%' 
+                cursor.execute ("SELECT * FROM queue WHERE  bge LIKE  %s and vin = %s", (datas, vin))
+                
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -276,19 +245,13 @@ def addhotlist(data,seng,vin,notify,theplate):
             
                 if olddata != data:
                     bge = data
-                    cursor.execute ("""
-                    UPDATE queue
-                    SET bge=%s
-                    WHERE vin = %s
-                    """,(bge,vin))
+                    cursor.execute ("UPDATE queue SET bge=%s WHERE vin = %s",(bge,vin))
                     db.commit()
                     sendnotice(vin,bge,email,sengine,theplate);
             
              elif sengine =="baltimoreimpound":
-                cursor.execute ("""
-                SELECT * FROM queue
-                WHERE  baltimoreimpound LIKE  %s
-                """, (data))
+                datas = '%' + data + '%'
+                cursor.execute ("SELECT * FROM queue WHERE  baltimoreimpound LIKE  %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -298,19 +261,13 @@ def addhotlist(data,seng,vin,notify,theplate):
             
                 if olddata != data:
                     baltimoreimpound = data
-                    cursor.execute ("""
-                    UPDATE queue
-                    SET baltimoreimpound=%s
-                    WHERE vin = %s
-                    """,(baltimoreimpound,vin))
+                    cursor.execute ("UPDATE queue SET baltimoreimpound=%s WHERE vin = %s",(baltimoreimpound,vin))
                     db.commit()
                     sendnotice(vin,baltimoreimpound,email,sengine,theplate);
             
              elif sengine =="princeg":
-                cursor.execute ("""
-                SELECT * FROM queue
-                WHERE  princeg LIKE  %s
-                """, (data))
+                datas = '%' + data + '%'
+                cursor.execute ("SELECT * FROM queue WHERE  princeg LIKE  %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -320,19 +277,13 @@ def addhotlist(data,seng,vin,notify,theplate):
             
                 if olddata != data:
                     princeg = data
-                    cursor.execute ("""
-                    UPDATE queue
-                    SET princeg=%s
-                    WHERE vin = %s
-                    """,(princeg,vin))
+                    cursor.execute ("UPDATE queue SET princeg=%s WHERE vin = %s",(princeg,vin))
                     db.commit()
                     sendnotice(vin,princeg,email,sengine,theplate);
             
              else:
-                cursor.execute ("""
-                SELECT * FROM information.queue
-                WHERE  tendigit LIKE  %s
-                """, (data))
+                datas = '%' + data + '%'
+                cursor.execute ("SELECT * FROM information.queue WHERE  tendigit LIKE  %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -342,11 +293,7 @@ def addhotlist(data,seng,vin,notify,theplate):
             
                 if olddata != data:
                     tendigit = data
-                    cursor.execute ("""
-                    UPDATE queue
-                    SET tendigit=%s
-                    WHERE vin = %s
-                    """,(tendigit,vin))
+                    cursor.execute ("UPDATE queue SET tendigit=%s WHERE vin = %s",(tendigit,vin))
                     db.commit()
                     sendnotice(vin,tendigit,email,sengine,theplate);
      except Exception as e:
@@ -745,7 +692,7 @@ def dcdmvDC (theplate,vin,notify):
                 
                 if flagger == True:
                     if data[i][2] != None and containDate(data[i][2]):
-                        print data[i][2]
+                        #print data[i][2]
                         issue_date = data[i][2]
                         violation = data[i][3]
                         ticket_number = data[i][1]
@@ -754,7 +701,7 @@ def dcdmvDC (theplate,vin,notify):
                         continue
                 else:
                     if data[i][1] != None and containDate(data[i][1]):
-                        print data[i][1]
+                        #print data[i][1]
                         issue_date = data[i][1]
                         violation = data[i][2]
                         location = data[i][3]
@@ -781,11 +728,11 @@ def dcdmvDC (theplate,vin,notify):
             br.close
 
     except Exception as e:
-            print traceback.format_exc()
+            #print traceback.format_exc()
             logger.error("There was error inside the dcdmvDC method "+str(e))
             logger.error('Information are theplate -> %s, vin -> %s, notify -> %s', theplate,vin,notify)
     return
-    
+
 
 def dcdmvMD (theplate,vin,notify):
     try:
