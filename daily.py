@@ -672,7 +672,7 @@ def dcdmvDC (theplate,vin,notify):
             tree1 =  lxml.html.tostring(table)
             tree2 = lxml.html.fromstring(tree1)
             rows = tree2.xpath('//table/tr')
-        
+            flagger = False
         
             for row in rows:
                     data.append([c.text for c in row.getchildren()])
