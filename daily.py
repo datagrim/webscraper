@@ -54,7 +54,7 @@ logger.addHandler(hdlr)
 logger.addHandler(fh) 
 logger.setLevel(logging.DEBUG)
 
-#compare string
+#compare and see if it contain date
 def containDate(word):
     regexp = re.compile(r'(\d+/\d+/\d+)')
     if regexp.search(word) is not None:
@@ -675,7 +675,6 @@ def dcdmvDC (theplate,vin,notify):
         
         
             for row in rows:
-<<<<<<< HEAD
                     data.append([c.text for c in row.getchildren()])
             
             #print data[1][1]
@@ -710,15 +709,6 @@ def dcdmvDC (theplate,vin,notify):
                     else:
                         continue
                     
-                
-=======
-                data.append([c.text for c in row.getchildren()])
-        
-        
-            for i in range(1,len(data)-1):
-                issue_date = data[1][1]
-        
->>>>>>> origin/master
                 if len(issue_date) != 0:
                     curdate = str(time.strftime("%m/%d/%Y"))
                     start_date = datetime.strptime(curdate, "%m/%d/%Y")
@@ -739,10 +729,6 @@ def dcdmvDC (theplate,vin,notify):
         
          
     except Exception as e:
-<<<<<<< HEAD
-            #print traceback.format_exc()
-=======
->>>>>>> origin/master
             logger.error("There was error inside the dcdmvDC method "+str(e))
             logger.error('Information are theplate -> %s, vin -> %s, notify -> %s', theplate,vin,notify)
     return
