@@ -242,6 +242,9 @@ def addhotlist(data,seng,vin,notify,theplate):
                     olddata = results[25]
                 else:
                     olddata = "nothing"
+
+                logger.info('OLD DATA IS --> : '+olddata)
+                logger.info('NEW DATA IS --> : '+data)
             
                 if olddata != data:
                     bge = data
