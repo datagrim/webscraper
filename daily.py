@@ -707,9 +707,9 @@ def dcdmvDC (theplate,vin,notify):
          ('Keep-Alive', '115'),
          ('Connection', 'keep-alive'),
          ('Cache-Control', 'max-age=0')]   
-            
-         """DC DMV - DC Area Search"""
-         seng = "dcdmvdc"
+         
+         """DC DMV - DC Search"""
+         seng = "dcdmvmd"
          res = br.open('https://prodpci.etimspayments.com/pbw/include/dc_parking/input.jsp?ticketType=P')
          resp = br.response().read()
          br.form = list(br.forms())[0]
@@ -719,50 +719,21 @@ def dcdmvDC (theplate,vin,notify):
          tree = lxml.html.fromstring(resp)
          data = list()
          data2 = []
+         
          if len(tree) > 2:
             table, = tree.xpath('//*[.="Violation"]/ancestor::table[1]')
             tree1 =  lxml.html.tostring(table)
             tree2 = lxml.html.fromstring(tree1)
             rows = tree2.xpath('//table/tr')
-            flagger = False
-            start_zone = 1
+        
         
             for row in rows:
-                    data.append([c.text for c in row.getchildren()])
-            
-            #print data[1][1]
-            if data[1][1] != None and data[1][1].strip() == 'You must pay all of the following boot eligible tickets to retrieve your vehicle.':
-                flagger = True
-                start_zone = 3
-            else:
-                start_zone = 1
-            
-            for i in range(start_zone,len(data)-1):
-                ticket_number = ''
-                issue_date = ''
-                violation = ''
-                location = ''
-                
-                if flagger == True:
-                    if data[i][2] != None and containDate(data[i][2]):
-                        print data[i][2]
-                        issue_date = data[i][2]
-                        violation = data[i][3]
-                        ticket_number = data[i][1]
-                        location = data[i][4]
-                    else:
-                        continue
-                else:
-                    if data[i][1] != None and containDate(data[i][1]):
-                        print data[i][1]
-                        issue_date = data[i][1]
-                        violation = data[i][2]
-                        location = data[i][3]
-                        ticket_number = data[i][0]
-                    else:
-                        continue
-                    
-                
+                data.append([c.text for c in row.getchildren()])
+        
+        
+            for i in range(1,len(data)-1):
+                issue_date = data[1][1]
+        
                 if len(issue_date) != 0:
                     curdate = str(time.strftime("%m/%d/%Y"))
                     start_date = datetime.strptime(curdate, "%m/%d/%Y")
@@ -770,18 +741,19 @@ def dcdmvDC (theplate,vin,notify):
                     since = abs((end_date-start_date).days)
         
                     if since <= 14:
-                        data2.append ("Ticket#: %s Issue Date: %s Violation: %s Location: %s" % (ticket_number,issue_date,violation,location))
+                        data2.append ("Ticket#: %s Issue Date: %s Violation: %s Location: %s" % (data[i][0],data[i][1],data[i][2],data[i][3]))
+                        
+            if len(data2) != 0:
+                data = "<br>".join(map(str, data2))
+                data.rstrip(os.linesep)
+                addhotlist(data,seng,vin,notify,theplate);
+                br.close
+                        
+         else:
+            return
         
-        
-         if len(data) != 0:
-            data = "<br>".join(map(str, data2))
-            data.rstrip(os.linesep)
-            addhotlist(data,seng,vin,notify,theplate);
-            #print('added hotlist VIN: '+vin)
-            br.close
-
+         
     except Exception as e:
-            print traceback.format_exc()
             logger.error("There was error inside the dcdmvDC method "+str(e))
             logger.error('Information are theplate -> %s, vin -> %s, notify -> %s', theplate,vin,notify)
     return
@@ -801,7 +773,7 @@ def dcdmvMD (theplate,vin,notify):
          ('Connection', 'keep-alive'),
          ('Cache-Control', 'max-age=0')]   
          
-         """DC DMV - MD Search"""
+         """DC DMV - MDC Search"""
          seng = "dcdmvmd"
          res = br.open('https://prodpci.etimspayments.com/pbw/include/dc_parking/input.jsp?ticketType=P')
          resp = br.response().read()
