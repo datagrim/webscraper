@@ -716,7 +716,7 @@ def dcdmvDC (theplate,vin,notify):
                     since = abs((end_date-start_date).days)
         
                     if since <= 14:
-                        data2.append ("Ticket#: %s Issue Date: %s Violation: %s Location: %s" % (data[i][0],data[i][1],data[i][2],data[i][3]))
+                        data2.append ("Ticket#: %s Issue Date: %s Violation: %s Location: %s" % (ticket_number,issue_date,violation,location))
                         
             if len(data2) != 0:
                 data = "<br>".join(map(str, data2))
