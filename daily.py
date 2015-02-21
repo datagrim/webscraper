@@ -154,7 +154,7 @@ def addhotlist(data,seng,vin,notify,theplate):
             
              if sengine == "mdcourt":
                 datas = '%' + data + '%'
-                cursor.execute ("SELECT * FROM queue WHERE  mdcourt LIKE  %s and vin = %s", (datas, vin))
+                cursor.execute ("SELECT * FROM queue WHERE  mdcourt LIKE %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -170,7 +170,7 @@ def addhotlist(data,seng,vin,notify,theplate):
             
              elif sengine == "mdcityservices":
                 datas = '%' + data + '%'
-                cursor.execute ("SELECT * FROM queue WHERE  mdcityservices LIKE  %s and vin = %s", (datas, vin))
+                cursor.execute ("SELECT * FROM queue WHERE  mdcityservices LIKE %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -186,7 +186,7 @@ def addhotlist(data,seng,vin,notify,theplate):
             
              elif sengine == "dcdmvmd":
                 datas = '%' + data + '%'
-                cursor.execute ("SELECT * FROM queue WHERE  dcdmvmd LIKE  %s ", (datas, vin))
+                cursor.execute ("SELECT * FROM queue WHERE  dcdmvmd LIKE %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -202,7 +202,7 @@ def addhotlist(data,seng,vin,notify,theplate):
             
              elif sengine == "dcdmvdc":
                 datas = '%' + data + '%'
-                cursor.execute ("SELECT * FROM queue WHERE dcdmvdc LIKE  %s and vin = %s", (datas, vin))
+                cursor.execute ("SELECT * FROM queue WHERE dcdmvdc LIKE %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -218,7 +218,7 @@ def addhotlist(data,seng,vin,notify,theplate):
             
              elif sengine == "autreturn":
                 datas = '%' + data + '%'
-                cursor.execute ("SELECT * FROM queue WHERE  autreturn LIKE  %s and vin = %s", (datas, vin))
+                cursor.execute ("SELECT * FROM queue WHERE  autreturn LIKE %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -234,7 +234,7 @@ def addhotlist(data,seng,vin,notify,theplate):
             
              elif sengine == "bge":
                 datas = '%' + data + '%' 
-                cursor.execute ("SELECT * FROM queue WHERE  bge LIKE  %s and vin = %s", (datas, vin))
+                cursor.execute ("SELECT * FROM queue WHERE  bge LIKE %s and vin = %s", (datas, vin))
                 
                 db.commit()
                 results = cursor.fetchone()
@@ -251,7 +251,7 @@ def addhotlist(data,seng,vin,notify,theplate):
             
              elif sengine =="baltimoreimpound":
                 datas = '%' + data + '%'
-                cursor.execute ("SELECT * FROM queue WHERE  baltimoreimpound LIKE  %s and vin = %s", (datas, vin))
+                cursor.execute ("SELECT * FROM queue WHERE  baltimoreimpound LIKE %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
@@ -283,7 +283,7 @@ def addhotlist(data,seng,vin,notify,theplate):
             
              else:
                 datas = '%' + data + '%'
-                cursor.execute ("SELECT * FROM information.queue WHERE  tendigit LIKE  %s and vin = %s", (datas, vin))
+                cursor.execute ("SELECT * FROM information.queue WHERE  tendigit LIKE %s and vin = %s", (datas, vin))
                 db.commit()
                 results = cursor.fetchone()
                 if results != None:
