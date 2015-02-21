@@ -48,7 +48,7 @@ count = 0
 logger = logging.getLogger('daily')
 hdlr = logging.FileHandler(mylogfile)
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-fh=logging.handlers.RotatingFileHandler(mylogfile,maxBytes=1024,backupCount=5)
+fh=logging.handlers.RotatingFileHandler(mylogfile,maxBytes=1000000,backupCount=20)
 hdlr.setFormatter(formatter)
 logger.addHandler(hdlr) 
 logger.addHandler(fh) 
@@ -242,11 +242,12 @@ def addhotlist(data,seng,vin,notify,theplate):
                     olddata = results[25]
                 else:
                     olddata = "nothing"
-
-                logger.info('OLD DATA IS --> : '+olddata)
-                logger.info('NEW DATA IS --> : '+data)
-            
+                
                 if olddata != data:
+                logger.info('')
+                logger.info('OLD DATA IS --> :'+olddata)
+                logger.info('NEW DATA IS --> :'+data)
+                logger.info('you should get this email of new data of previous')
                     bge = data
                     cursor.execute ("UPDATE queue SET bge=%s WHERE vin = %s",(bge,vin))
                     db.commit()
