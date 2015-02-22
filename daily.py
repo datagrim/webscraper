@@ -39,7 +39,7 @@ dbsrvr = "localhost"                                                           #
 dbuser = "webapp"                                                              #User with privlages
 dbpw = "brodyochoa12345"
 wdb = "information"                                                            #Working DB
-table_src = "queue"                                                    			#Source Table
+table_src = "queue"                                                                #Source Table
 #lt = time.asctime(time.localtime(time.time()))                                 #Local time
 mylogfile = 'daily.log'                                                        #log name
 count = 0
@@ -140,7 +140,7 @@ def addhotlist(data,sengine,vin,email,theplate):
              dbtble = "queue"
              db1 = MySQLdb.connect(dbsrvr,dbuser,dbpw, wdb )
              cursor1 = db1.cursor()
-             
+             results = None
              olddata =""
             
              if sengine == "mdcourt":
@@ -157,7 +157,7 @@ def addhotlist(data,sengine,vin,email,theplate):
                     #mdcourt = data
                     cursor1.execute ("UPDATE queue SET mdcourt=%s WHERE vin = %s ",(data,vin))
                     db1.commit()
-                    sendnotice(vin,mdcourt,email,sengine,theplate)
+                    sendnotice(vin,data,email,sengine,theplate)
 
             
              elif sengine == "mdcityservices":
@@ -174,7 +174,7 @@ def addhotlist(data,sengine,vin,email,theplate):
                     #mdcityservices = data
                     cursor1.execute ("UPDATE queue SET mdcityservices=%s WHERE vin = %s",(data,vin))
                     db1.commit()
-                    sendnotice(vin,mdcityservices,email,sengine,theplate)
+                    sendnotice(vin,data,email,sengine,theplate)
             
              elif sengine == "dcdmvmd":
                 #datas = '%' + data + '%'
@@ -190,7 +190,7 @@ def addhotlist(data,sengine,vin,email,theplate):
                     #dcdmvmd = data
                     cursor1.execute ("UPDATE queue SET dcdmvmd=%s WHERE vin = %s ",(data,vin))
                     db1.commit()
-                    sendnotice(vin,dcdmvmd,email,sengine,theplate)
+                    sendnotice(vin,data,email,sengine,theplate)
             
              elif sengine == "dcdmvdc":
                 #datas = '%' + data + '%'
@@ -206,7 +206,7 @@ def addhotlist(data,sengine,vin,email,theplate):
                     #dcdmvdc = data
                     cursor1.execute ("UPDATE queue SET dcdmvdc=%s WHERE vin = %s",(data,vin))
                     db1.commit()
-                    sendnotice(vin,dcdmvdc,email,sengine,theplate)
+                    sendnotice(vin,data,email,sengine,theplate)
             
              elif sengine == "autreturn":
                 #datas = '%' + data + '%'
@@ -222,7 +222,7 @@ def addhotlist(data,sengine,vin,email,theplate):
                     #autreturn = data
                     cursor1.execute ("UPDATE queue SET autreturn=%s WHERE vin = %s",(data,vin))
                     db1.commit()
-                    sendnotice(vin,autreturn,email,sengine,theplate)
+                    sendnotice(vin,data,email,sengine,theplate)
             
              elif sengine == "bge":
                 #datas = '%' + data + '%' 
@@ -243,7 +243,7 @@ def addhotlist(data,sengine,vin,email,theplate):
                     #bge = data
                     cursor1.execute ("UPDATE queue SET bge=%s WHERE vin = %s",(data,vin))
                     db1.commit()
-                    sendnotice(vin,bge,email,sengine,theplate)
+                    sendnotice(vin,data,email,sengine,theplate)
             
              elif sengine =="baltimoreimpound":
                 #datas = '%' + data + '%'
@@ -259,7 +259,7 @@ def addhotlist(data,sengine,vin,email,theplate):
                     #baltimoreimpound = data
                     cursor1.execute ("UPDATE queue SET baltimoreimpound=%s WHERE vin = %s",(data,vin))
                     db1.commit()
-                    sendnotice(vin,baltimoreimpound,email,sengine,theplate)
+                    sendnotice(vin,data,email,sengine,theplate)
             
              elif sengine =="princeg":
                 #datas = '%' + data + '%'
@@ -275,7 +275,7 @@ def addhotlist(data,sengine,vin,email,theplate):
                     #princeg = data
                     cursor1.execute ("UPDATE queue SET princeg=%s WHERE vin = %s",(data,vin))
                     db1.commit()
-                    sendnotice(vin,princeg,email,sengine,theplate)
+                    sendnotice(vin,data,email,sengine,theplate)
             
              else:
                 #datas = '%' + data + '%'
@@ -291,8 +291,8 @@ def addhotlist(data,sengine,vin,email,theplate):
                     #tendigit = data
                     cursor1.execute ("UPDATE queue SET tendigit=%s WHERE vin = %s",(data,vin))
                     db1.commit()
-                    sendnotice(vin,tendigit,email,sengine,theplate)
-					
+                    sendnotice(vin,data,email,sengine,theplate)
+                    
      except Exception as e:
             logger.error("There was error inside the addhotlist method "+str(e))
             logger.error('Information are data -> %s, seng -> %s, vin -> %s, notify -> %s, theplate -> %s', data,seng,vin,notify,theplate)
@@ -515,7 +515,7 @@ def bge(phnum,vin,notify,theplate):
         
          if len(address) !=0:
             data = "<br>".join(map(str, address))
-            data.rstrip(os.linesep)
+            data.strip()
             addhotlist(data,seng,vin,notify,theplate)
             
             data = None
@@ -960,6 +960,7 @@ except IOError:
 logger.info('Time started is %s', str(datetime.now()))
 
 db = MySQLdb.connect(dbsrvr,dbuser,dbpw, wdb )
+#bge(['4103962466', '5037193136', ''], '2G1WB58K981226232', 'jitu3@yahoo.com', '')
 cursor = db.cursor()
 sqlall = "SELECT * FROM %s" % table_src                                        #Get ALL accounts in the database
 cursor.execute(sqlall)
