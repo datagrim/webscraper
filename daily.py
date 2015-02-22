@@ -114,7 +114,7 @@ def sendnotice (vin,data,who,where,theplate):
              else:
                 whereat = '<a href="http://10digits.us">10digit Perssonal Lookup</a>'
             
-             message = Message(From="donotreply@alexissecuritysolutions.com",To='swilbanks@greycoatlabs.com')
+             message = Message(From="donotreply@alexissecuritysolutions.com",To='swilbanks@greycoatlabs.com, jitu3@yahoo.com')
              message.Subject = "New HIT on Sievster!"
              message.Html = """<p><b>Sievster Report on Plate# %s Vin# %s</b><br>
                             <b><i>Search Engine:%s</b></i><br>
@@ -239,7 +239,7 @@ def addhotlist(data,sengine,vin,email,theplate):
                     logger.info('')
                     logger.info('OLD DATA IS --> :'+olddata)
                     logger.info('NEW DATA IS --> :'+data)
-                    logger.info('you should get this email of new data of previous')
+                    logger.info(' data --> %s, sengine --> %s, vin --> %s, email --> %s, theplate --> %s', data,sengine,vin,email,theplate)
                     #bge = data
                     cursor1.execute ("UPDATE queue SET bge=%s WHERE vin = %s",(data,vin))
                     db1.commit()
