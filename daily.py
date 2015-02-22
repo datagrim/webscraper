@@ -114,7 +114,7 @@ def sendnotice (vin,data,who,where,theplate):
              else:
                 whereat = '<a href="http://10digits.us">10digit Perssonal Lookup</a>'
             
-             message = Message(From="donotreply@alexissecuritysolutions.com",To='swilbanks@greycoatlabs.com, jitu3@yahoo.com')
+             message = Message(From="donotreply@alexissecuritysolutions.com",To='swilbanks@greycoatlabs.com')
              message.Subject = "New HIT on Sievster!"
              message.Html = """<p><b>Sievster Report on Plate# %s Vin# %s</b><br>
                             <b><i>Search Engine:%s</b></i><br>
