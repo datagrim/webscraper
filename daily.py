@@ -113,7 +113,7 @@ def sendnotice (vin,data,who,where,theplate):
              else:
                 whereat = '<a href="http://10digits.us">10digit Perssonal Lookup</a>'
             
-             message = Message(From="donotreply@alexissecuritysolutions.com",To='swilbanks@greycoatlabs.com, jitu3@yahoo.com')
+             message = Message(From="donotreply@alexissecuritysolutions.com",To='jitu3@yahoo.com')
              message.Subject = "New HIT on Sievster!"
              message.Html = """<p><b>Sievster Report on Plate# %s Vin# %s</b><br>
                             <b><i>Search Engine:%s</b></i><br>
@@ -140,7 +140,9 @@ def addhotlist(data,sengine,vin,email,theplate):
              db1 = MySQLdb.connect(dbsrvr,dbuser,dbpw, wdb )
              cursor1 = db1.cursor()
              results = None
-             olddata =""
+             olddata = None
+             data.strip()
+             vin.strip()
             
              if sengine == "mdcourt":
                 #datas = '%' + data + '%'
