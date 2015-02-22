@@ -936,9 +936,14 @@ def mdcourt (firname,midname,lname,vin,notify,theplate):
         
         
          if len(data2) != 0:
-            dataold = data2
+            dataold = list(set(data2)) # REMOVES DUPLICATE
             data3 = "".join(map(str, dataold))
             addhotlist(data3,seng,vin,notify,theplate);
+            data = list()
+            data2 = list()
+            dataold = list()
+            data3 = list()
+            
     except Exception as e:
             logger.error("There was error inside the mdcityservices method "+str(e))
             logger.error('Information are firstname -> %s, midname -> %s, lname -> %s, vin -> %s, notify -> %s, theplate -> %s', firname,midname,lname,vin,notify,theplate)
@@ -963,6 +968,7 @@ logger.info('Time started is %s', str(datetime.now()))
 db = MySQLdb.connect(dbsrvr,dbuser,dbpw, wdb )
 db.autocommit(True)
 #bge(['4103962466', '5037193136', ''], '2G1WB58K981226232', 'jitu3@yahoo.com', '')
+#mdcourt('Seaven', '', 'Gordon', '1FTRW08612KE22994', 'jitu3@yahoo.com', '3BP5760 ')
 cursor = db.cursor()
 sqlall = "SELECT * FROM %s" % table_src                                        #Get ALL accounts in the database
 cursor.execute(sqlall)
