@@ -33,6 +33,7 @@ from mailer import Mailer
 from datetime import datetime
 from mailer import Message
 from logging import handlers
+from pandas.algos import NIL
 
 #Global Constraints
 dbsrvr = "localhost"                                                           #Server DB address
@@ -494,13 +495,12 @@ def pgeorge (vin,notify,theplate):
 
 
 
-def bge(phnumber,vin,notify,theplate):
+def bge(phnum,vin,notify,theplate):
     try:
          """BGE Search"""
          seng = "bge"
-         phnum = phnumber
-         final = []
          address = []
+         
          while '' in phnum:
             phnum.remove('')
         
@@ -524,10 +524,14 @@ def bge(phnumber,vin,notify,theplate):
         
         
          if len(address) !=0:
-            dataold = address
-            data = "<br>".join(map(str, dataold))
+            data = "<br>".join(map(str, address))
             data.rstrip(os.linesep)
-            addhotlist(data,seng,vin,notify,theplate);
+            addhotlist(data,seng,vin,notify,theplate)
+            
+            data = None
+          
+            address = []
+            
     except Exception as e:
             logger.error("There was error inside the bge method "+str(e))
             logger.error('Information are phnumber -> %s, vin -> %s, notify -> %s, theplate -> %s', phnumber,vin,notify,theplate)
