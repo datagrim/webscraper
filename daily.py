@@ -33,7 +33,6 @@ from mailer import Mailer
 from datetime import datetime
 from mailer import Message
 from logging import handlers
-from pandas.algos import NIL
 
 #Global Constraints
 dbsrvr = "localhost"                                                           #Server DB address
