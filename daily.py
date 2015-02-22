@@ -45,13 +45,13 @@ mylogfile = 'daily.log'                                                        #
 count = 0
 
 #Python logger 
-mylogger = logging.getLogger("daily")
+logger = logging.getLogger("daily")
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 handler = logging.StreamHandler(stream=sys.stdout)
 handler.setFormatter(formatter)
 handler.setLevel(logging.DEBUG)
-mylogger.addHandler(handler)
-mylogger.setLevel(logging.DEBUG)
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
 
 #compare and see if it contain date
 def containDate(word):
