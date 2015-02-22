@@ -47,7 +47,7 @@ count = 0
 #Python logger 
 logger = logging.getLogger("daily")
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-handler = logging.StreamHandler(stream=sys.stdout)
+handler = logging.FileHandler(mylogfile)
 handler.setFormatter(formatter)
 handler.setLevel(logging.DEBUG)
 logger.addHandler(handler)
