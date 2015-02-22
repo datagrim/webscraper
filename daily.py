@@ -726,7 +726,7 @@ def dcdmvDC (theplate,vin,notify):
                         
             if len(data2) != 0:
                 data = "<br>".join(map(str, data2))
-                data.rstrip(os.linesep)
+                data.strip()
                 addhotlist(data,seng,vin,notify,theplate);
                 br.close
                         
@@ -791,7 +791,7 @@ def dcdmvMD (theplate,vin,notify):
                         
             if len(data2) != 0:
                 data = "<br>".join(map(str, data2))
-                data.rstrip(os.linesep)
+                data.strip()
                 addhotlist(data,seng,vin,notify,theplate);
                 br.close
                         
@@ -854,7 +854,7 @@ def mdcityservices (theplate,vin,notify):
          if len(data2) != 0:
             dataold = data2
             data = "<br>".join(map(str, dataold))
-            data.rstrip(os.linesep)
+            data.strip()
             addhotlist(data,seng,vin,notify,theplate);
             br.close
             
