@@ -138,6 +138,7 @@ def addhotlist(data,sengine,vin,email,theplate):
      try:
              dbtble = "queue"
              db1 = MySQLdb.connect(dbsrvr,dbuser,dbpw, wdb )
+             db1.autocommit(True)
              cursor1 = db1.cursor()
              results = None
              olddata = None
@@ -146,9 +147,9 @@ def addhotlist(data,sengine,vin,email,theplate):
             
              if sengine == "mdcourt":
                 #datas = '%' + data + '%'
-                cursor1.execute ("SELECT * FROM queue WHERE  mdcourt = %s and vin = %s", (data, vin))
-                
+                cursor1.execute ("SELECT * FROM queue WHERE  mdcourt = %s and vin = %s",(data, vin))
                 results = cursor1.fetchone()
+                db1.commit()
                 if results != None:
                     olddata = results[19]
                 else:
@@ -156,16 +157,16 @@ def addhotlist(data,sengine,vin,email,theplate):
             
                 if olddata != data:
                     #mdcourt = data
-                    cursor1.execute ("UPDATE queue SET mdcourt=%s WHERE vin = %s ",(data,vin))
+                    cursor1.execute ("UPDATE queue SET mdcourt = %s WHERE vin = %s ",(data,vin))
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
             
              elif sengine == "mdcityservices":
                 #datas = '%' + data + '%'
-                cursor1.execute ("SELECT * FROM queue WHERE  mdcityservices = %s and vin = %s", (data, vin))
-                
+                cursor1.execute ("SELECT * FROM queue WHERE  mdcityservices = %s and vin = %s",(data, vin))
                 results = cursor1.fetchone()
+                db1.commit()
                 if results != None:
                     olddata = results[20]
                 else:
@@ -179,9 +180,9 @@ def addhotlist(data,sengine,vin,email,theplate):
             
              elif sengine == "dcdmvmd":
                 #datas = '%' + data + '%'
-                cursor1.execute ("SELECT * FROM queue WHERE  dcdmvmd = %s and vin = %s", (data, vin))
-                #db.commit()
+                cursor1.execute ("SELECT * FROM queue WHERE  dcdmvmd = %s and vin = %s",(data, vin))
                 results = cursor1.fetchone()
+                db1.commit()
                 if results != None:
                     olddata = results[21]
                 else:
@@ -195,9 +196,9 @@ def addhotlist(data,sengine,vin,email,theplate):
             
              elif sengine == "dcdmvdc":
                 #datas = '%' + data + '%'
-                cursor1.execute ("SELECT * FROM queue WHERE dcdmvdc = %s and vin = %s", (data, vin))
-                #db.commit()
+                cursor1.execute ("SELECT * FROM queue WHERE dcdmvdc = %s and vin = %s",(data, vin))
                 results = cursor1.fetchone()
+                db1.commit()
                 if results != None:
                     olddata = results[22]
                 else:
@@ -211,9 +212,9 @@ def addhotlist(data,sengine,vin,email,theplate):
             
              elif sengine == "autreturn":
                 #datas = '%' + data + '%'
-                cursor1.execute ("SELECT * FROM queue WHERE  autreturn = %s and vin = %s", (data, vin))
-                #db.commit()
+                cursor1.execute ("SELECT * FROM queue WHERE  autreturn = %s and vin = %s",(data, vin))
                 results = cursor1.fetchone()
+                db1.commit()
                 if results != None:
                     olddata = results[23]
                 else:
@@ -227,10 +228,9 @@ def addhotlist(data,sengine,vin,email,theplate):
             
              elif sengine == "bge":
                 #datas = '%' + data + '%' 
-                cursor1.execute ("SELECT * FROM queue WHERE  bge = %s and vin = %s", (data, vin))
-                
-                #db.commit()
+                cursor1.execute ("SELECT * FROM queue WHERE  vin = %s and bge = %s",(vin, data))
                 results = cursor1.fetchone()
+                db1.commit()
                 if results != None:
                     olddata = results[25]
                 else:
@@ -249,8 +249,8 @@ def addhotlist(data,sengine,vin,email,theplate):
              elif sengine =="baltimoreimpound":
                 #datas = '%' + data + '%'
                 cursor1.execute ("SELECT * FROM queue WHERE  baltimoreimpound = %s and vin = %s", (data, vin))
-                #db.commit()
                 results = cursor1.fetchone()
+                db1.commit()
                 if results != None:
                     olddata = results[26]
                 else:
@@ -265,8 +265,8 @@ def addhotlist(data,sengine,vin,email,theplate):
              elif sengine =="princeg":
                 #datas = '%' + data + '%'
                 cursor1.execute ("SELECT * FROM queue WHERE  princeg = %s and vin = %s", (data, vin))
-                #db.commit()
                 results = cursor1.fetchone()
+                db1.commit()
                 if results != None:
                     olddata = results[27]
                 else:
@@ -281,8 +281,8 @@ def addhotlist(data,sengine,vin,email,theplate):
              else:
                 #datas = '%' + data + '%'
                 cursor1.execute ("SELECT * FROM information.queue WHERE  tendigit = %s and vin = %s", (data, vin))
-                #db.commit()
                 results = cursor1.fetchone()
+                db1.commit()
                 if results != None:
                     olddata = results[24]
                 else:
@@ -961,11 +961,13 @@ except IOError:
 logger.info('Time started is %s', str(datetime.now()))
 
 db = MySQLdb.connect(dbsrvr,dbuser,dbpw, wdb )
+db.autocommit(True)
 #bge(['4103962466', '5037193136', ''], '2G1WB58K981226232', 'jitu3@yahoo.com', '')
 cursor = db.cursor()
 sqlall = "SELECT * FROM %s" % table_src                                        #Get ALL accounts in the database
 cursor.execute(sqlall)
 results = cursor.fetchall()
+db.commit()
 rows=len(results)
 if rows == 0:                                                                  #Ensure DB is not empty
     logger.info('Database empty, Quiting')
@@ -1013,12 +1015,19 @@ for row in results:
         last_check = db.escape_string(str(row[29]))
         count += 1
 
+        if len(date_added) > 0:
+            date_added.strip()
+
+        if len(vin) > 0:
+            vin.strip()
+
         if len(last_check) == 0:
             cursor.execute ("""
             UPDATE queue
             SET lstchk=%s
             WHERE vin = %s
             """,(date_added,vin))
+
             db.commit()
             since = 1
         else:
@@ -1034,6 +1043,18 @@ for row in results:
             WHERE vin = %s
             """,(curdate,vin))
             db.commit()
+
+        if len(lname) > 0:
+            lname.strip()
+
+        if len(fname) > 0:
+            fname.strip()
+
+        if len(tag_number) > 0:
+            tag_number.strip()
+
+        if len(notify) > 0:
+            notify.strip()
 
             if search_region == "1":
                 print "some code soon"
