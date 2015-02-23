@@ -140,137 +140,145 @@ def addhotlist(data,sengine,vin,email,theplate):
              vin.strip()
 
              if sengine == "mdcourt":
-                cursor1.execute ("SELECT * FROM queue WHERE  mdcourt = %s and vin = %s",(data, vin))
+
+                a = "SELECT * FROM queue WHERE vin = '%s'" % (vin)
+                cursor1.execute(a)
                 results = cursor1.fetchone()
                 db1.commit()
-                if results != None:
-                    olddata = results[19]
-                else:
-                    olddata = "nothing"
+                if results != None and results[19] == data:
+                    pass
+                elif results[19] != data or results == None :
 
-                if olddata != data:
-                    cursor1.execute ("UPDATE queue SET mdcourt = %s WHERE vin = %s ",(data,vin))
+                    b = "UPDATE queue SET mdcourt='%s' WHERE vin = '%s'" % (data,vin)
+                    cursor1.execute(b)
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
 
              elif sengine == "mdcityservices":
-                cursor1.execute ("SELECT * FROM queue WHERE  mdcityservices = %s and vin = %s",(data, vin))
+
+                a = "SELECT * FROM queue WHERE vin = '%s'" % (vin)
+                cursor1.execute(a)
                 results = cursor1.fetchone()
                 db1.commit()
-                if results != None:
-                    olddata = results[20]
-                else:
-                    olddata = "nothing"
+                if results != None and results[20] == data:
+                    pass
+                elif results[20] != data or results == None :
 
-                if olddata != data:
-                    cursor1.execute ("UPDATE queue SET mdcityservices=%s WHERE vin = %s",(data,vin))
+                    b = "UPDATE queue SET mdcityservices='%s' WHERE vin = '%s'" % (data,vin)
+                    cursor1.execute(b)
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              elif sengine == "dcdmvmd":
-                cursor1.execute ("SELECT * FROM queue WHERE  dcdmvmd = %s and vin = %s",(data, vin))
+
+                a = "SELECT * FROM queue WHERE vin = '%s'" % (vin)
+                cursor1.execute(a)
                 results = cursor1.fetchone()
                 db1.commit()
-                if results != None:
-                    olddata = results[21]
-                else:
-                    olddata = "nothing"
+                if results != None and results[21] == data:
+                    pass
+                elif results[21] != data or results == None :
 
-                if olddata != data:
-                    cursor1.execute ("UPDATE queue SET dcdmvmd=%s WHERE vin = %s ",(data,vin))
+                    b = "UPDATE queue SET dcdmvmd='%s' WHERE vin = '%s'" % (data,vin)
+                    cursor1.execute(b)
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              elif sengine == "dcdmvdc":
-                cursor1.execute ("SELECT * FROM queue WHERE dcdmvdc = %s and vin = %s",(data, vin))
+
+                a = "SELECT * FROM queue WHERE vin = '%s'" % (vin)
+                cursor1.execute(a)
                 results = cursor1.fetchone()
                 db1.commit()
-                if results != None:
-                    olddata = results[22]
-                else:
-                    olddata = "nothing"
+                if results != None and results[22] == data:
+                    pass
+                elif results[22] != data or results == None :
 
-                if olddata != data:
-                    cursor1.execute ("UPDATE queue SET dcdmvdc=%s WHERE vin = %s",(data,vin))
+                    b = "UPDATE queue SET dcdmvdc='%s' WHERE vin = '%s'" % (data,vin)
+                    cursor1.execute(b)
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              elif sengine == "autreturn":
-                cursor1.execute ("SELECT * FROM queue WHERE  autreturn = %s and vin = %s",(data, vin))
+
+                a = "SELECT * FROM queue WHERE vin = '%s'" % (vin)
+                cursor1.execute(a)
                 results = cursor1.fetchone()
                 db1.commit()
-                if results != None:
-                    olddata = results[23]
-                else:
-                    olddata = "nothing"
+                if results != None and results[23] == data:
+                    pass
+                elif results[23] != data or results == None :
 
-                if olddata != data:
-                    cursor1.execute ("UPDATE queue SET autreturn=%s WHERE vin = %s",(data,vin))
+                    b = "UPDATE queue SET autreturn='%s' WHERE vin = '%s'" % (data,vin)
+                    cursor1.execute(b)
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
+
              elif sengine == "bge":
-                cursor1.execute ("SELECT * FROM queue WHERE  vin = %s and bge = %s",(vin, data))
+                a = "SELECT * FROM queue WHERE vin = '%s'" % (vin)
+                cursor1.execute(a)
                 results = cursor1.fetchone()
                 db1.commit()
-                if results != None:
-                    olddata = results[25]
-                else:
-                    olddata = "nothing"
-
-                if olddata != data:
+                if results != None and results[25] == data:
+                    pass
+                elif results[25] != data or results == None :
                     #comment out this line if everything works great
                     logger.info('')
                     logger.info('')
                     logger.info('---------- DEBUG ONLY FOR BGE --------------')
-                    logger.info('OLD DATA IS --> :'+olddata)
+                    logger.info('OLD DATA IS --> : Nothing fetched')
                     logger.info('NEW DATA IS --> :'+data)
                     logger.info('data --> %s, sengine --> %s, vin --> %s, email --> %s, theplate --> %s', data,sengine,vin,email,theplate)
                     #comment out this line if everything works great
-                    cursor1.execute ("UPDATE queue SET bge=%s WHERE vin = %s",(data,vin))
+
+                    b = "UPDATE queue SET bge='%s' WHERE vin = '%s'" % (data,vin)
+                    cursor1.execute(b)
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              elif sengine =="baltimoreimpound":
-                cursor1.execute ("SELECT * FROM queue WHERE  baltimoreimpound = %s and vin = %s", (data, vin))
+
+                a = "SELECT * FROM queue WHERE vin = '%s'" % (vin)
+                cursor1.execute(a)
                 results = cursor1.fetchone()
                 db1.commit()
-                if results != None:
-                    olddata = results[26]
-                else:
-                    olddata = "nothing"
+                if results != None and results[26] == data:
+                    pass
+                elif results[26] != data or results == None :
 
-                if olddata != data:
-                    cursor1.execute ("UPDATE queue SET baltimoreimpound=%s WHERE vin = %s",(data,vin))
+                    b = "UPDATE queue SET baltimoreimpound='%s' WHERE vin = '%s'" % (data,vin)
+                    cursor1.execute(b)
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              elif sengine =="princeg":
-                cursor1.execute ("SELECT * FROM queue WHERE  princeg = %s and vin = %s", (data, vin))
+
+                a = "SELECT * FROM queue WHERE vin = '%s'" % (vin)
+                cursor1.execute(a)
                 results = cursor1.fetchone()
                 db1.commit()
-                if results != None:
-                    olddata = results[27]
-                else:
-                    olddata = "nothing"
+                if results != None and results[27] == data:
+                    pass
+                elif results[27] != data or results == None :
 
-                if olddata != data:
-                    cursor1.execute ("UPDATE queue SET princeg=%s WHERE vin = %s",(data,vin))
+                    b = "UPDATE queue SET princeg='%s' WHERE vin = '%s'" % (data,vin)
+                    cursor1.execute(b)
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              else:
-                cursor1.execute ("SELECT * FROM information.queue WHERE  tendigit = %s and vin = %s", (data, vin))
+                a = "SELECT * FROM queue WHERE vin = '%s'" % (vin)
+                cursor1.execute(a)
                 results = cursor1.fetchone()
                 db1.commit()
-                if results != None:
-                    olddata = results[24]
-                else:
-                    olddata = "nothing"
+                if results != None and results[24] == data:
+                    pass
+                elif results[24] != data or results == None :
 
-                if olddata != data:
-                    cursor1.execute ("UPDATE queue SET tendigit=%s WHERE vin = %s",(data,vin))
+                    b = "UPDATE queue SET tendigit='%s' WHERE vin = '%s'" % (data,vin)
+                    cursor1.execute(b)
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
@@ -501,7 +509,7 @@ def bge(phnum,vin,notify,theplate):
                 output = json.loads(binary)
 
                 for eachoutput in output['d']['OutageData']:
-                    address.append(str(eachoutput['FullAddress']))
+                    address.append(eachoutput['FullAddress'].encode('ascii','ignore'))
 
 
          if len(address) !=0:
@@ -943,7 +951,7 @@ def mdcourt (firname,midname,lname,vin,notify,theplate):
 ###############################################Main Code Loop######################################################
 ###################################################################################################################
 
-start_time = time.clock()
+start_time = datetime.now()
 try:
  pid_file = 'daily.pid'                                                         #Place lock
  fp = open(pid_file, 'w')
@@ -1030,7 +1038,7 @@ for row in results:
             end_date = datetime.strptime(last_check, "%m/%d/%y")
             since = abs((end_date-start_date).days)
 
-        if since == 0: #change back to !=
+        if since != 0: #change back to !=
             cursor.execute ("""
             UPDATE queue
             SET lstchk=%s
@@ -1067,9 +1075,9 @@ for row in results:
 db.commit()
 cursor.close()
 db.close()
-timer = time.clock() - start_time
+end_time = datetime.now()
 logger.info('System processing done with '+ str(count) +' entries')
-logger.info('Total processing time: '+ str(timer))
+logger.info('Duration of program execution: {}'.format(end_time - start_time))
 sys.exit()
 
 ###################################################################################################################
