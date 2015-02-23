@@ -12,27 +12,20 @@
 
 #Imports
 import MySQLdb
-import getopt
 import sys
 import re
 import time
 import mechanize
 import urllib
-import socket
 import fcntl
-import os
 import lxml.html
 import json
 import requests
-import traceback
-import urllib2
 import threading
 import logging
-from datetime import datetime
 from mailer import Mailer
 from datetime import datetime
 from mailer import Message
-from logging import handlers
 
 #Global Constraints
 dbsrvr = "localhost"                                                           #Server DB address
@@ -53,6 +46,7 @@ handler.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 logger.setLevel(logging.DEBUG)
 
+
 #compare and see if it contain date
 def containDate(word):
     regexp = re.compile(r'(\d+/\d+/\d+)')
@@ -60,6 +54,7 @@ def containDate(word):
         return True
     else:
         return False
+
 
 #Definitions
 def monkeypatch_mechanize():
@@ -138,7 +133,6 @@ def addhotlist(data,sengine,vin,email,theplate):
      try:
              dbtble = "queue"
              db1 = MySQLdb.connect(dbsrvr,dbuser,dbpw, wdb )
-             #db1.autocommit(True)
              cursor1 = db1.cursor()
              results = None
              olddata = None
@@ -146,7 +140,6 @@ def addhotlist(data,sengine,vin,email,theplate):
              vin.strip()
 
              if sengine == "mdcourt":
-                #datas = '%' + data + '%'
                 cursor1.execute ("SELECT * FROM queue WHERE  mdcourt = %s and vin = %s",(data, vin))
                 results = cursor1.fetchone()
                 db1.commit()
@@ -156,14 +149,12 @@ def addhotlist(data,sengine,vin,email,theplate):
                     olddata = "nothing"
 
                 if olddata != data:
-                    #mdcourt = data
                     cursor1.execute ("UPDATE queue SET mdcourt = %s WHERE vin = %s ",(data,vin))
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
 
              elif sengine == "mdcityservices":
-                #datas = '%' + data + '%'
                 cursor1.execute ("SELECT * FROM queue WHERE  mdcityservices = %s and vin = %s",(data, vin))
                 results = cursor1.fetchone()
                 db1.commit()
@@ -173,13 +164,11 @@ def addhotlist(data,sengine,vin,email,theplate):
                     olddata = "nothing"
 
                 if olddata != data:
-                    #mdcityservices = data
                     cursor1.execute ("UPDATE queue SET mdcityservices=%s WHERE vin = %s",(data,vin))
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              elif sengine == "dcdmvmd":
-                #datas = '%' + data + '%'
                 cursor1.execute ("SELECT * FROM queue WHERE  dcdmvmd = %s and vin = %s",(data, vin))
                 results = cursor1.fetchone()
                 db1.commit()
@@ -189,13 +178,11 @@ def addhotlist(data,sengine,vin,email,theplate):
                     olddata = "nothing"
 
                 if olddata != data:
-                    #dcdmvmd = data
                     cursor1.execute ("UPDATE queue SET dcdmvmd=%s WHERE vin = %s ",(data,vin))
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              elif sengine == "dcdmvdc":
-                #datas = '%' + data + '%'
                 cursor1.execute ("SELECT * FROM queue WHERE dcdmvdc = %s and vin = %s",(data, vin))
                 results = cursor1.fetchone()
                 db1.commit()
@@ -205,13 +192,11 @@ def addhotlist(data,sengine,vin,email,theplate):
                     olddata = "nothing"
 
                 if olddata != data:
-                    #dcdmvdc = data
                     cursor1.execute ("UPDATE queue SET dcdmvdc=%s WHERE vin = %s",(data,vin))
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              elif sengine == "autreturn":
-                #datas = '%' + data + '%'
                 cursor1.execute ("SELECT * FROM queue WHERE  autreturn = %s and vin = %s",(data, vin))
                 results = cursor1.fetchone()
                 db1.commit()
@@ -221,13 +206,11 @@ def addhotlist(data,sengine,vin,email,theplate):
                     olddata = "nothing"
 
                 if olddata != data:
-                    #autreturn = data
                     cursor1.execute ("UPDATE queue SET autreturn=%s WHERE vin = %s",(data,vin))
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              elif sengine == "bge":
-                #datas = '%' + data + '%'
                 cursor1.execute ("SELECT * FROM queue WHERE  vin = %s and bge = %s",(vin, data))
                 results = cursor1.fetchone()
                 db1.commit()
@@ -245,13 +228,11 @@ def addhotlist(data,sengine,vin,email,theplate):
                     logger.info('NEW DATA IS --> :'+data)
                     logger.info('data --> %s, sengine --> %s, vin --> %s, email --> %s, theplate --> %s', data,sengine,vin,email,theplate)
                     #comment out this line if everything works great
-                    #bge = data
                     cursor1.execute ("UPDATE queue SET bge=%s WHERE vin = %s",(data,vin))
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              elif sengine =="baltimoreimpound":
-                #datas = '%' + data + '%'
                 cursor1.execute ("SELECT * FROM queue WHERE  baltimoreimpound = %s and vin = %s", (data, vin))
                 results = cursor1.fetchone()
                 db1.commit()
@@ -261,13 +242,11 @@ def addhotlist(data,sengine,vin,email,theplate):
                     olddata = "nothing"
 
                 if olddata != data:
-                    #baltimoreimpound = data
                     cursor1.execute ("UPDATE queue SET baltimoreimpound=%s WHERE vin = %s",(data,vin))
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              elif sengine =="princeg":
-                #datas = '%' + data + '%'
                 cursor1.execute ("SELECT * FROM queue WHERE  princeg = %s and vin = %s", (data, vin))
                 results = cursor1.fetchone()
                 db1.commit()
@@ -277,13 +256,11 @@ def addhotlist(data,sengine,vin,email,theplate):
                     olddata = "nothing"
 
                 if olddata != data:
-                    #princeg = data
                     cursor1.execute ("UPDATE queue SET princeg=%s WHERE vin = %s",(data,vin))
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
 
              else:
-                #datas = '%' + data + '%'
                 cursor1.execute ("SELECT * FROM information.queue WHERE  tendigit = %s and vin = %s", (data, vin))
                 results = cursor1.fetchone()
                 db1.commit()
@@ -293,7 +270,6 @@ def addhotlist(data,sengine,vin,email,theplate):
                     olddata = "nothing"
 
                 if olddata != data:
-                    #tendigit = data
                     cursor1.execute ("UPDATE queue SET tendigit=%s WHERE vin = %s",(data,vin))
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
@@ -401,9 +377,10 @@ def baltimoreimpound (vin,notify,theplate):
         g = tree.xpath('//*[@id="Description"]/font')
         h = tree.xpath('//*[@id="Property_Type"]/font')
         i = tree.xpath('//*[@id="Release_Data"]/font')
+        br.close
 
         if len(a) == 0:
-            br.close
+            return
         else:
             curdate = str(time.strftime("%m/%d/%Y"))
             rec = c[0].text
@@ -423,7 +400,6 @@ def baltimoreimpound (vin,notify,theplate):
                 release_data = i[0].text
                 data = "Recvd:" + rec + " Property#" + propnnumber + " Vin:" + thevin  +" Plate:" + lic + " Lot:"+lot
                 addhotlist(data,seng,vin,notify,theplate);
-                br.close
     except Exception as e:
         logger.error("There was error inside the baltimoreimpound method "+str(e))
         logger.error('Information are vin -> %s, notify -> %s, theplate -> %s', vin,notify,theplate)
@@ -459,9 +435,10 @@ def pgeorge (vin,notify,theplate):
         c = tree.xpath('//*[@id="lblimpdt"]') # impound date format 01/03/2015 %m/%d/%Y
         d = tree.xpath('//*[@id="lblimptm"]') #impound time
         e = tree.xpath('//*[@id="lblreldt"]') #Release Date
+        br.close
 
         if len(a) == 0:
-            br.close
+            return
         else:
             curdate = str(time.strftime("%m/%d/%Y"))
             impounddate = c[0].text
@@ -485,8 +462,8 @@ def pgeorge (vin,notify,theplate):
                         impounddate = c[0].text
                         impoundtime = d[0].text
                         data = thevin + plate + impounddate + releasedate
-                        addhotlist(data,seng,vin,notify,theplate);
-                        br.close
+                        addhotlist(data,seng,vin,notify,theplate)
+
     except Exception as e:
             logger.error("There was error inside the pgeorge method "+str(e))
             logger.error('Information are vin -> %s, notify -> %s, theplate -> %s', vin,notify,theplate)
@@ -529,9 +506,7 @@ def bge(phnum,vin,notify,theplate):
             data = "<br>".join(map(str, dataold))
             data.strip()
             addhotlist(data,seng,vin,notify,theplate)
-
             data = None
-
             address = []
 
     except Exception as e:
@@ -544,19 +519,6 @@ def bge(phnum,vin,notify,theplate):
 
 def tendigit(firname,midname,lname,vin,notify,theplate):
     try:
-         br = mechanize.Browser(mechanize.RobustFactory())
-         br.set_handle_robots(False)
-         br.set_handle_refresh(False)
-         br.addheaders = [('User-Agent', 'Mozilla/5.0 (Linux; U; Android 2.3.4; en-us; T-Mobile myTouch 3G Slide Build/GRI40) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1'),
-         ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),
-         ('Accept-Language', 'en-gb,en;q=0.5'),
-         ('Accept-Encoding', 'gzip,deflate'),
-         ('Accept-Charset', 'ISO-8859-1,utf-8;q=0.7,*;q=0.7'),
-         ('Keep-Alive', '115'),
-         ('Connection', 'keep-alive'),
-         ('Cache-Control', 'max-age=0')]
-
-
          seng = "tendigit"
          name = firname + " " + lname
          fixed = name.replace (" ", "_")
@@ -572,7 +534,7 @@ def tendigit(firname,midname,lname,vin,notify,theplate):
          sat = tree.xpath('/html/body/div/div[2]/ul/li/ul/li[4]/span/span[3]')
          ph = tree.xpath('/html/body/div/div[2]/ul/li/ul/li[5]')
          if len(ne) == 0:
-            br.close
+             return
          else:
             name = ne[0].text
             st_address = nr[0].text + " " + st[0].text + " " + cty[0].text
@@ -581,12 +543,10 @@ def tendigit(firname,midname,lname,vin,notify,theplate):
               data = name + " " + st_address + " " + phone
             else:
               data = name + " " + st_address
-              br.close
-              addhotlist(data,seng,vin,notify,theplate);
+              addhotlist(data,seng,vin,notify,theplate)
     except Exception as e:
             logger.error("There was error inside the tendigit method "+str(e))
             logger.error('Information are firname -> %s, midname -> %s, lname -> %s, vin -> %s, notify -> %s, theplate -> %s', firname,midname,lname,vin,notify,theplate)
-            br.close
     return
 
 
@@ -617,7 +577,8 @@ def autoreturn (vin,notify,theplate):
          all_list = tree.xpath('//table/tr/td')
 
          if (len(all_list) == 0):
-           br.close
+             br.close
+             return
          else:
             br.form = list(br.forms())[0]
             control = br.form.controls[0]
@@ -635,6 +596,7 @@ def autoreturn (vin,notify,theplate):
             start_date = datetime.strptime(curdate, "%m/%d/%y")
             end_date = datetime.strptime(tom, "%m/%d/%y")
             since = abs((end_date-start_date).days)
+            br.close
 
             if since <= 14:
                trnum = all_list[0].text.strip()
@@ -650,8 +612,8 @@ def autoreturn (vin,notify,theplate):
                info.append("Plate:" + licenses)
                info.append("Tow Company:" + company)
                data = '<br>'.join(info)
-               addhotlist(data,seng,vin,notify,theplate);
-               br.close
+               addhotlist(data,seng,vin,notify,theplate)
+
     except Exception as e:
             logger.error("There was error inside the autoreturn method "+str(e))
             logger.error('Information are vin -> %s, notify -> %s, theplate -> %s', vin,notify,theplate)
@@ -686,6 +648,7 @@ def dcdmvDC (theplate,vin,notify):
          tree = lxml.html.fromstring(resp)
          data = list()
          data2 = []
+         br.close
 
          if len(tree) > 2:
             table, = tree.xpath('//*[.="Violation"]/ancestor::table[1]')
@@ -743,8 +706,7 @@ def dcdmvDC (theplate,vin,notify):
                 dataold = list(set(data2)) # REMOVES DUPLICATE
                 data = "<br>".join(map(str, dataold))
                 data.strip()
-                addhotlist(data,seng,vin,notify,theplate);
-                br.close
+                addhotlist(data,seng,vin,notify,theplate)
 
          else:
             return
@@ -783,6 +745,7 @@ def dcdmvMD (theplate,vin,notify):
          data = list()
          data2 = []
          dataold = list()
+         br.close
 
          if len(tree) > 2:
             table, = tree.xpath('//*[.="Violation"]/ancestor::table[1]')
@@ -811,8 +774,7 @@ def dcdmvMD (theplate,vin,notify):
                 dataold = list(set(data2)) # REMOVES DUPLICATE
                 data = "<br>".join(map(str, dataold))
                 data.strip()
-                addhotlist(data,seng,vin,notify,theplate);
-                br.close
+                addhotlist(data,seng,vin,notify,theplate)
 
          else:
             return
@@ -863,6 +825,7 @@ def mdcityservices (theplate,vin,notify):
          data = list()
          dataold = list()
          data2 = []
+         br.close
          if len(table) > 0:
             rows = table[0].xpath('./tr')
 
@@ -876,13 +839,13 @@ def mdcityservices (theplate,vin,notify):
             dataold = list(set(data2)) # REMOVES DUPLICATE
             data = "<br>".join(map(str, dataold))
             data.strip()
-            addhotlist(data,seng,vin,notify,theplate);
-            br.close
+            addhotlist(data,seng,vin,notify,theplate)
 
     except Exception as e:
             logger.error("There was error inside the mdcityservices method "+str(e))
             logger.error('Information are theplate -> %s, vin -> %s, notify -> %s', theplate,vin,notify)
             br.close
+
     return
 
 
@@ -920,6 +883,8 @@ def mdcourt (firname,midname,lname,vin,notify,theplate):
          data = list()
          data2 = list()
          dataold = list()
+         br.close
+
          # it fetch me table body (tbody eliminate the table header)
          if (tree.xpath('//*[@id="row"]/tbody')):
             table = tree.xpath('//*[@id="row"]/tbody')[0]
@@ -961,18 +926,20 @@ def mdcourt (firname,midname,lname,vin,notify,theplate):
             dataold = list(set(data2)) # REMOVES DUPLICATE
             data3 = "".join(map(str, dataold))
             addhotlist(data3,seng,vin,notify,theplate)
-            br.close
 
 
     except Exception as e:
             logger.error("There was error inside the mdcityservices method "+str(e))
             logger.error('Information are firstname -> %s, midname -> %s, lname -> %s, vin -> %s, notify -> %s, theplate -> %s', firname,midname,lname,vin,notify,theplate)
+            br.close
 
     return
 
 
+###################################################################################################################
+###############################################Main Code Loop######################################################
+###################################################################################################################
 
-"""Main Code Loop"""
 start_time = time.clock()
 try:
  pid_file = 'daily.pid'                                                         #Place lock
@@ -986,7 +953,6 @@ except IOError:
 logger.info('Time started is %s', str(datetime.now()))
 
 db = MySQLdb.connect(dbsrvr,dbuser,dbpw, wdb )
-#db.autocommit(True)
 #bge(['4103962466', '5037193136', ''], '2G1WB58K981226232', 'jitu3@yahoo.com', '')
 #mdcourt('Seaven', '', 'Gordon', '1FTRW08612KE22994', 'jitu3@yahoo.com', '3BP5760 ')
 cursor = db.cursor()
@@ -999,7 +965,6 @@ if rows == 0:                                                                  #
     logger.info('Database empty, Quiting')
     sys.exit(0)
 else:
-    #lt = time.asctime(time.localtime(time.time()))
     logger.info('Database Operation Started')
 for row in results:
     try:
@@ -1085,7 +1050,7 @@ for row in results:
             if search_region == "1":
                 print "some code soon"
             elif search_region == "2":
-                region2(lname,fname,tag_number,vin,notify,phnumber);
+                region2(lname,fname,tag_number,vin,notify,phnumber)
             elif search_region == "3":
                 print "some code soon"
             else:
@@ -1093,6 +1058,7 @@ for row in results:
 
     except Exception as e:
         logger.error('Error --> : '+str(e))
+        db.commit()
         continue
 
 db.commit()
@@ -1102,3 +1068,7 @@ timer = time.clock() - start_time
 logger.info('System processing done with '+ str(count) +' entries')
 logger.info('Total processing time: '+ str(timer))
 sys.exit()
+
+###################################################################################################################
+###################################################################################################################
+###################################################################################################################
