@@ -384,8 +384,11 @@ def baltimoreimpound (vin,notify,theplate):
         else:
             curdate = str(time.strftime("%m/%d/%Y"))
             rec = c[0].text
-            sentence = rec.split(" ")
-            tom = sentence[0]
+            if rec != None:
+                sentence = rec.split(" ")
+                tom = sentence[0]
+            else:
+                tom = '01/01/01'
             start_date = datetime.strptime(curdate, "%m/%d/%Y")
             end_date = datetime.strptime(tom, "%m/%d/%Y")
             since = abs((end_date-start_date).days)
