@@ -35,6 +35,8 @@ wdb = "information"                                                            #
 table_src = "queue"                                                                #Source Table
 #lt = time.asctime(time.localtime(time.time()))                                 #Local time
 mylogfile = 'daily.log'                                                        #log name
+lock = threading.Lock()
+seng = ''
 count = 0
 
 #Python logger
@@ -219,21 +221,27 @@ def addhotlist(data,sengine,vin,email,theplate):
              elif sengine == "bge":
                 a = "SELECT * FROM queue WHERE vin = '%s'" % (vin)
                 cursor1.execute(a)
+                #time.sleep(2)
                 results = cursor1.fetchone()
-                db1.commit()
-                if results != None and results[25] == data:
+                #db1.commit()
+                if results is not None and results[25] == data:
                     pass
-                elif results[25] != data or results == None :
+                elif results[25] != data or results is None :
                     #comment out this line if everything works great
                     logger.info('')
                     logger.info('')
                     logger.info('---------- DEBUG ONLY FOR BGE --------------')
-                    logger.info('OLD DATA IS --> : Nothing fetched')
+                    logger.info('cursor1.fetchone() - Results is None? : '+ str(results is None))
+                    logger.info('results[25] != data? : '+ str(results[25] != data))
+                    logger.info('results[25] aka Old datas are '+"".join(map(str, results[25])))
+                    #logger.info('OLD DATA IS --> : Nothing fetched')
                     logger.info('NEW DATA IS --> :'+data)
                     logger.info('data --> %s, sengine --> %s, vin --> %s, email --> %s, theplate --> %s', data,sengine,vin,email,theplate)
+                    logger.info('Select Query -> '+a)
                     #comment out this line if everything works great
 
                     b = "UPDATE queue SET bge='%s' WHERE vin = '%s'" % (data,vin)
+                    logger.info('Update Query -> '+b)
                     cursor1.execute(b)
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
@@ -292,7 +300,6 @@ def addhotlist(data,sengine,vin,email,theplate):
      cursor1.close()
      db1.close()
      results = None
-
      return
 
 
@@ -486,39 +493,46 @@ def pgeorge (vin,notify,theplate):
 def bge(phnum,vin,notify,theplate):
     try:
          """BGE Search"""
-         seng = "bge"
-         address = []
-         dataold = list()
+         address = list()
+         #dataold = list()
+         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+         url = "https://secure.bge.com/_layouts/Bge.Canp/AnonymousService.asmx/GetCustomerDataOutage"
+         data = {
+                    "captchaAns":"null",
+                    "captchaEncCode":"null",
+                    "accountNumber":""
+                }
 
          while '' in phnum:
             phnum.remove('')
 
          for numbers in phnum:
             if len(numbers) != 0:
-                url = "https://secure.bge.com/_layouts/Bge.Canp/AnonymousService.asmx/GetCustomerDataOutage"
-                data = {
-                    "captchaAns":"null",
-                    "captchaEncCode":"null",
-                    "accountNumber":""
-                }
-                data['phoneNumber'] = numbers
-                headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+
+                r = None
+                binary = None
+                output = None
+                eachoutput = None
+
+                data['phoneNumber'] = numbers.strip()
                 r = requests.post(url, data=json.dumps(data), headers=headers)
 
                 binary = r.content
                 output = json.loads(binary)
 
                 for eachoutput in output['d']['OutageData']:
+                    logger.info('Phone Number for after this - '+numbers)
                     address.append(eachoutput['FullAddress'].encode('ascii','ignore'))
 
 
          if len(address) !=0:
-            dataold = list(set(address)) # REMOVES DUPLICATE
-            data = "<br>".join(map(str, dataold))
+            address.sort()
+            #dataold = list(set(address)) # REMOVES DUPLICATE
+            #data = "<br>".join(map(str, dataold))
+            data = '<br>'.join(list(set(address)))
             data.strip()
+            seng ='bge'
             addhotlist(data,seng,vin,notify,theplate)
-            data = None
-            address = []
 
     except Exception as e:
             logger.error("There was error inside the bge method "+str(e))
