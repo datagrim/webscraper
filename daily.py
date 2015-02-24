@@ -90,7 +90,6 @@ def sendnotice (vin,data,who,where,theplate):
             #  data = the found data"""
             #  who = who to email"""
             #  where = Searchengine where found"""
-             whom = who
              if where == 'mdcourt':
                 whereat = '<a href="http://casesearch.courts.state.md.us/inquiry/inquiry-index.jsp">MD Judiciary Case Search</a>'
              elif where == 'mdcityservices':
@@ -110,7 +109,7 @@ def sendnotice (vin,data,who,where,theplate):
              else:
                 whereat = '<a href="http://10digits.us">10digit Perssonal Lookup</a>'
 
-             message = Message(From="donotreply@alexissecuritysolutions.com",To='jitu3@yahoo.com')
+             message = Message(From="donotreply@alexissecuritysolutions.com",To=who)
              message.Subject = "New HIT on Sievster!"
              message.Html = """<p><b>Sievster Report on Plate# %s Vin# %s</b><br>
                             <b><i>Search Engine:%s</b></i><br>
@@ -225,26 +224,29 @@ def addhotlist(data,sengine,vin,email,theplate):
                 results = cursor1.fetchone()
                 #db1.commit()
                 if results is not None and results[25] == data:
-                    pass
-                elif results[25] != data or results is None :
-                    #comment out this line if everything works great
-                    logger.info('')
-                    logger.info('')
-                    logger.info('---------- DEBUG ONLY FOR BGE --------------')
-                    logger.info('cursor1.fetchone() - Results is None? : '+ str(results is None))
-                    logger.info('results[25] != data? : '+ str(results[25] != data))
-                    logger.info('results[25] aka Old datas are '+"".join(map(str, results[25])))
-                    #logger.info('OLD DATA IS --> : Nothing fetched')
-                    logger.info('NEW DATA IS --> :'+data)
-                    logger.info('data --> %s, sengine --> %s, vin --> %s, email --> %s, theplate --> %s', data,sengine,vin,email,theplate)
-                    logger.info('Select Query -> '+a)
-                    #comment out this line if everything works great
-
+                    logger.info('matched!!!')
+                    #pass
+                elif results[25] is None:
                     b = "UPDATE queue SET bge='%s' WHERE vin = '%s'" % (data,vin)
+                    logger.info('Solo data -> '+data)
                     logger.info('Update Query -> '+b)
                     cursor1.execute(b)
                     db1.commit()
                     sendnotice(vin,data,email,sengine,theplate)
+
+                elif results[25] is not None and results[25] != data:
+                    logger.info('From database data is --> ' + results[25])
+                    one = results[25].split('<br>')
+                    two = data.split('<br>')
+                    three = one + two
+                    data1 = '<br>'.join(list(sorted(set(three))))
+                    logger.info('combined data is '+data1)
+
+                    b = "UPDATE queue SET bge='%s' WHERE vin = '%s'" % (data1,vin)
+                    logger.info('Update Query -> '+b)
+                    cursor1.execute(b)
+                    db1.commit()
+                    #sendnotice(vin,data,email,sengine,theplate)
 
              elif sengine =="baltimoreimpound":
 
@@ -503,34 +505,25 @@ def bge(phnum,vin,notify,theplate):
                     "accountNumber":""
                 }
 
-         while '' in phnum:
-            phnum.remove('')
-
          for numbers in phnum:
-            if len(numbers) != 0:
+             r = None
+             binary = None
+             output = None
+             eachoutput = None
 
-                r = None
-                binary = None
-                output = None
-                eachoutput = None
+             data['phoneNumber'] = numbers.strip()
+             r = requests.post(url, data=json.dumps(data), headers=headers)
+             binary = r.content
+             output = json.loads(binary)
 
-                data['phoneNumber'] = numbers.strip()
-                r = requests.post(url, data=json.dumps(data), headers=headers)
-
-                binary = r.content
-                output = json.loads(binary)
-
-                for eachoutput in output['d']['OutageData']:
-                    logger.info('Phone Number for after this - '+numbers)
-                    address.append(eachoutput['FullAddress'].encode('ascii','ignore'))
+             for eachoutput in output['d']['OutageData']:
+                 address.append(str(eachoutput['FullAddress']))
 
 
          if len(address) !=0:
-            address.sort()
-            #dataold = list(set(address)) # REMOVES DUPLICATE
-            #data = "<br>".join(map(str, dataold))
-            data = '<br>'.join(list(set(address)))
+            data = '<br>'.join(list(sorted(set(address))))
             data.strip()
+            address = None
             seng ='bge'
             addhotlist(data,seng,vin,notify,theplate)
 
@@ -993,7 +986,7 @@ else:
     logger.info('Database Operation Started')
 for row in results:
     try:
-        phnumber = []
+        phnumber = list()
         case_number = db.escape_string(str(row[1]))
         lname = db.escape_string(str(row[2]))
         fname = db.escape_string(str(row[3]))
@@ -1030,6 +1023,8 @@ for row in results:
         status = db.escape_string(str(row[28]))
         last_check = db.escape_string(str(row[29]))
         count += 1
+
+        phnumber = filter(None, phnumber)
 
         if len(date_added) > 0:
             date_added.strip()
@@ -1072,14 +1067,16 @@ for row in results:
         if len(notify) > 0:
             notify.strip()
 
-            if search_region == "1":
-                print "some code soon"
-            elif search_region == "2":
-                region2(lname,fname,tag_number,vin,notify,phnumber)
-            elif search_region == "3":
-                print "some code soon"
-            else:
-                print "some code soon"
+
+
+        if search_region == "1":
+            print "some code soon"
+        elif search_region == "2":
+            region2(lname,fname,tag_number,vin,notify,phnumber)
+        elif search_region == "3":
+            print "some code soon"
+        else:
+            print "some code soon"
 
     except Exception as e:
         logger.error('Error --> : '+str(e))
